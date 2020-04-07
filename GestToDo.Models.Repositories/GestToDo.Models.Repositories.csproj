@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GestToDo.Forms\GestToDo.Forms.csproj" />
+    <ProjectReference Include="..\GestToDo.Interfaces\GestToDo.Interfaces.csproj" />
+    <ProjectReference Include="..\GestToDo.Models.Data\GestToDo.Models.Data.csproj" />
+    <ProjectReference Include="..\GestToDo.Models.Global\GestToDo.Models.Global.csproj" />
+  </ItemGroup>
+
+</Project>

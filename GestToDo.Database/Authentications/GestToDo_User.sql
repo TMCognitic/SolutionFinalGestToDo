@@ -1,0 +1,8 @@
+﻿CREATE USER [GestToDo]
+	FOR LOGIN [GestToDo]
+	WITH DEFAULT_SCHEMA = dbo
+
+GO
+
+GRANT CONNECT TO [GestToDo]
+

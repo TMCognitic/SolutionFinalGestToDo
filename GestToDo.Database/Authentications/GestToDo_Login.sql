@@ -1,0 +1,1 @@
+﻿CREATE LOGIN [GestToDo] WITH PASSWORD = 'GestToDo'

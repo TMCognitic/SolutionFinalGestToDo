@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GestToDo.Forms\GestToDo.Forms.csproj" />
+    <ProjectReference Include="..\GestToDo.Interfaces\GestToDo.Interfaces.csproj" />
+    <ProjectReference Include="..\GestToDo.Models.Global\GestToDo.Models.Global.csproj" />
+    <ProjectReference Include="..\GestToDo.Models.Repositories\GestToDo.Models.Repositories.csproj" />
+  </ItemGroup>
+
+</Project>
