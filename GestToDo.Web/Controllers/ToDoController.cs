@@ -12,41 +12,31 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestToDo.Web.Controllers
 {
-    public class ToDoController : Controller
+    [AuthRequired]
+    public class ToDoController : ControllerBase
     {
-        private readonly ISessionManager _sessionManager;
         private readonly IToDoRepository<ToDo> _toDoRepository;
 
-        public ToDoController(IToDoRepository<ToDo> toDoRepository, ISessionManager sessionManager)
+        public ToDoController(IToDoRepository<ToDo> toDoRepository, ISessionManager sessionManager) : base(sessionManager)
         {
-            _sessionManager = sessionManager;
             _toDoRepository = toDoRepository;
         }
 
         // GET: ToDo
         public ActionResult Index()
         {
-            if (_sessionManager.User is null)
-                return RedirectToAction("Login", "Auth");
-
-            return View(_toDoRepository.Get(_sessionManager.User.Id));
+            return View(_toDoRepository.Get(SessionManager.User.Id));
         }
 
         // GET: ToDo/Details/5
         public ActionResult Details(int id)
         {
-            if (_sessionManager.User is null)
-                return RedirectToAction("Login", "Auth");
-
-            return View(_toDoRepository.Get(_sessionManager.User.Id, id));
+            return View(_toDoRepository.Get(SessionManager.User.Id, id));
         }
 
         // GET: ToDo/Create
         public ActionResult Create()
         {
-            if (_sessionManager.User is null)
-                return RedirectToAction("Login", "Auth");
-
             return View();
         }
 
@@ -55,14 +45,11 @@ namespace GestToDo.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateToDo form)
         {
-            if (_sessionManager.User is null)
-                return RedirectToAction("Login", "Auth");
-
             try
             {
                 if (ModelState.IsValid)
                 {
-                    _toDoRepository.Insert(new ToDo(form.Title, form.Description, _sessionManager.User.Id));
+                    _toDoRepository.Insert(new ToDo(form.Title, form.Description, SessionManager.User.Id));
                     return RedirectToAction("Index");
                 }
 
@@ -77,10 +64,7 @@ namespace GestToDo.Web.Controllers
         // GET: ToDo/Edit/5
         public ActionResult Edit(int id)
         {
-            if (_sessionManager.User is null)
-                return RedirectToAction("Login", "Auth");
-
-            ToDo td = _toDoRepository.Get(_sessionManager.User.Id, id);
+            ToDo td = _toDoRepository.Get(SessionManager.User.Id, id);
 
             return View(new EditToDo() { Id = td.Id, Title = td.Title, Description = td.Description, Done = td.Done });
         }
@@ -90,14 +74,11 @@ namespace GestToDo.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, EditToDo form)
         {
-            if (_sessionManager.User is null)
-                return RedirectToAction("Login", "Auth");
-
             try
             {
                 if (ModelState.IsValid)
                 {
-                    _toDoRepository.Update(id, new ToDo(id, form.Title, form.Description, form.Done, null, _sessionManager.User.Id));
+                    _toDoRepository.Update(id, new ToDo(id, form.Title, form.Description, form.Done, null, SessionManager.User.Id));
                     return RedirectToAction("Index");
                 }
 
@@ -112,7 +93,7 @@ namespace GestToDo.Web.Controllers
         // GET: ToDo/Delete/5
         public ActionResult Delete(int id)
         {
-            if (_sessionManager.User is null)
+            if (SessionManager.User is null)
                 return RedirectToAction("Login", "Auth");
 
             return View();
@@ -123,12 +104,9 @@ namespace GestToDo.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
-            if (_sessionManager.User is null)
-                return RedirectToAction("Login", "Auth");
-
             try
             {
-                _toDoRepository.Delete(_sessionManager.User.Id, id);
+                _toDoRepository.Delete(SessionManager.User.Id, id);
                 return RedirectToAction("Index");
             }
             catch

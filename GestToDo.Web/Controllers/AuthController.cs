@@ -11,29 +11,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestToDo.Web.Controllers
 {
-    public class AuthController : Controller
+    public class AuthController : ControllerBase
     {
         private readonly IAuthRepository<RegisterForm, LoginForm, User> _authRepository;
-        private readonly ISessionManager _sessionManager;
 
-        public AuthController(IAuthRepository<RegisterForm, LoginForm, User> authRepository, ISessionManager sessionManager)
+        public AuthController(IAuthRepository<RegisterForm, LoginForm, User> authRepository, ISessionManager sessionManager) : base(sessionManager)
         {
             _authRepository = authRepository;
-            _sessionManager = sessionManager;
         }
 
+        [AnonymousRequired]
         public IActionResult Index()
         {
             return RedirectToAction("Login");
         }
 
-        //[HttpGet]
+        [AnonymousRequired]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AnonymousRequired]
         public IActionResult Login(LoginForm loginForm)
         {
             if (ModelState.IsValid)
@@ -44,7 +44,7 @@ namespace GestToDo.Web.Controllers
 
                     if (!(user is null))
                     {
-                        _sessionManager.User = user;
+                        SessionManager.User = user;
                         return RedirectToAction("Index", "ToDo");
                     }
 
@@ -59,12 +59,14 @@ namespace GestToDo.Web.Controllers
             return View(loginForm);
         }
 
+        [AnonymousRequired]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
+        [AnonymousRequired]
         public IActionResult Register(RegisterForm registerForm)
         {
             if (ModelState.IsValid)
@@ -83,9 +85,10 @@ namespace GestToDo.Web.Controllers
             return View(registerForm);
         }
 
+        [AuthRequired]
         public IActionResult Logout()
         {            
-            _sessionManager.Abandon();
+            SessionManager.Abandon();
             return RedirectToAction("Login");
         }
     }
